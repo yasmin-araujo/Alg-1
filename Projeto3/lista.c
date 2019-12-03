@@ -19,17 +19,30 @@ struct _c
 void lista_insere_ordenado(Colecao *c, No *n)
 {
 	No *aux = c->inicio;
-
 	if (aux == NULL) // caso lista ainda esteja vazia
 		c->inicio = n;
 	else
 	{
-		while (aux->valor < n->valor) // acha nó maior
-			aux = aux->dir;
+		while (n->valor > aux->valor) // acha posição
+		{
+			if (aux->dir != NULL)
+				aux = aux->dir;
+			else
+			{
+				//coloca como ultimo da lista
+				aux->dir = n;
+				n->esq = aux;
+				return;
+			}
+		}
+		if (aux == c->inicio)
+			c->inicio = n;
 		n->esq = aux->esq;
 		n->dir = aux;
-		aux->esq->dir = n;
 		aux->esq = n;
+		aux = n->esq;
+		if (aux != NULL)
+			aux->dir = n;
 	}
 }
 
@@ -51,19 +64,43 @@ void lista_insere_fim(Colecao *c, No *n)
 void lista_insere_inicio(Colecao *c, No *n)
 {
 	n->dir = c->inicio;
-	if(c->inicio != NULL)
+	if (c->inicio != NULL)
 		c->inicio->esq = n;
 	c->inicio = n;
 }
 
-int lista_busca_ordenada(Colecao *c, int valor)
+int lista_busca_ordenada(Colecao *c, int valor) //falta arrumar condição de parada
 {
-	return 0;
+	No *aux = c->inicio;
+	if (aux == NULL)
+		return 0;
+	else
+	{
+		while (aux != NULL)
+		{
+			if(aux->valor == valor)
+				return 1;
+			aux = aux->dir;
+		}
+		return 0;
+	}
 }
 
 int lista_busca(Colecao *c, int valor)
 {
-	return 0;
+	No *aux = c->inicio;
+	if (aux == NULL)
+		return 0;
+	else
+	{
+		while (aux != NULL)
+		{
+			if(aux->valor == valor)
+				return 1;
+			aux = aux->dir;
+		}
+		return 0;
+	}
 }
 
 int lista_vazia(Colecao *c)
